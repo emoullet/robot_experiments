@@ -1,41 +1,47 @@
-# Expériences robotiques
+# Robot experiments
 
-Dépôt fédérateur personnel de préparation, sous **emoullet**. Chaque expérience
-est un dépôt autonome référencé ici comme sous-module à un commit précis.
-Les dépôts de l'organisation ISIR-EXTENDER ne sont pas modifiés par cette mise en place.
+Personal experiment umbrella repository under **emoullet**. Each experiment is
+an independent repository referenced here as a submodule at a specific commit.
+This setup does not modify repositories in the ISIR-EXTENDER organization.
 
-| Expérience | Dépôt | État |
+| Experiment | Repository | Status |
 | --- | --- | --- |
-| Snake | [emoullet/exp_snake](https://github.com/emoullet/exp_snake) | Cadrage versionné et brouillon de bringup ; application non implémentée |
+| Snake | [emoullet/exp_snake](https://github.com/emoullet/exp_snake) | Versioned planning documents and bringup draft; application not implemented |
 
-## Récupérer les expériences
+## Clone the experiments
 
 ```bash
 git clone --recurse-submodules https://github.com/emoullet/robot_experiments.git
 ```
 
-Le dépôt fédérateur est public ; certaines expériences et dépendances sont privées.
-Le clonage récursif demande les droits GitHub correspondants. Cloner le dépôt
-fédérateur sans récursion permet de consulter la méthode sans ces accès.
+The umbrella repository is public; some experiments and dependencies are private.
+Recursive cloning requires the corresponding GitHub permissions. Clone the
+umbrella repository without recursion to read the methodology without those permissions.
 
-Après changement de version, dans une copie de travail propre :
+After switching versions, from a clean working tree:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-Ne pas utiliser `--remote` pour reproduire une version : les commits enregistrés
-dans les dépôts parents sont la référence. Publier les commits des dépendances,
-puis ceux de l'expérience, puis la nouvelle référence dans ce dépôt fédérateur.
-Chaque expérience doit être compilée dans un workspace distinct du développement
-courant. `COLCON_IGNORE` empêche de découvrir accidentellement ces copies imbriquées.
+Do not use `--remote` to reproduce a version: commits recorded in the parent
+repositories are authoritative. Publish dependency commits first, then the
+experiment commit, then its updated reference in this umbrella repository.
+Build each experiment in a workspace separate from ongoing development.
+`COLCON_IGNORE` prevents accidental discovery of these nested package copies.
 
-## Méthode et décisions
+## Methodology and decisions
 
-- [Méthodologie de travail](docs/methodologie.md) : articulation Work, Drive, Codex et Git.
-- [Décisions et état de reprise](docs/decisions.md) : choix retenus et travaux restants.
-- Les détails scientifiques et opérationnels de Snake sont dans son dépôt privé.
+- [Working methodology](docs/methodology.md): how Work, Drive, Codex and Git fit together.
+- [Decisions and current status](docs/decisions.md): agreed choices and remaining work.
+- Snake's scientific and operational details are in its private repository.
 
-Ce dépôt catalogue les versions des expériences. Le commit propre à une expérience
-reste la référence principale pour identifier une session. Les données et les
-registres d'identité sont conservés hors Git.
+This repository catalogs experiment versions. Each experiment's own commit remains
+the primary reference for identifying a session. Data and identity registers are
+stored outside Git.
+
+## Repository language
+
+Write repository documentation, filenames, code comments, user-facing text and
+GitHub metadata in English. Label translations of external sources explicitly
+and link to the originals.

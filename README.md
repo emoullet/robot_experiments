@@ -10,6 +10,22 @@ This setup does not modify repositories in the ISIR-EXTENDER organization.
 
 ## Clone the experiments
 
+Clone this repository **outside the package-development ROS workspace**. Each
+experiment contains its own pinned package copies; these should not share source
+discovery or build outputs with ongoing algorithm development. For example, under
+any parent directory of your choice:
+
+```text
+<parent>/
+  package_development_ws/       # Working branches and their build/install/log
+  robot_experiments/            # Experiment repositories and pinned dependencies
+  experiment_builds/            # Optional location for isolated build outputs
+  experiment_data/              # Acquisitions outside Git
+```
+
+These directory names are illustrative, not required paths. Build instructions
+derive source locations from Git and allow a configurable output directory.
+
 ```bash
 git clone --recurse-submodules https://github.com/emoullet/robot_experiments.git
 ```
@@ -29,6 +45,10 @@ repositories are authoritative. Publish dependency commits first, then the
 experiment commit, then its updated reference in this umbrella repository.
 Build each experiment in a workspace separate from ongoing development.
 `COLCON_IGNORE` prevents accidental discovery of these nested package copies.
+
+To relocate an existing checkout, move the entire `robot_experiments` directory,
+including its hidden `.git` directory and all submodules. Then run the checks
+below. Rebuild any external build/install outputs that refer to the previous path.
 
 ## Verify the submodule checkout
 

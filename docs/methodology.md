@@ -67,6 +67,11 @@ register remains separate and is excluded from sharing exports.
 Each experiment has a dedicated build workspace. Shared supervision and session
 features will be considered based on Snake; no common framework is imposed yet.
 
+Keep the experiment repositories outside the package-development workspace.
+Derive source paths from the repository root and make build/data locations
+configurable; do not embed a developer's username or personal directory layout
+in operational instructions or code.
+
 ## Language convention
 
 Write repository content in English, including documentation, filenames,

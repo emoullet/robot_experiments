@@ -8,23 +8,70 @@ This setup does not modify repositories in the ISIR-EXTENDER organization.
 | --- | --- | --- |
 | Snake | [emoullet/exp_snake](https://github.com/emoullet/exp_snake) | Versioned planning documents and bringup draft; application not implemented |
 
+## Recommended local layout
+
+Keep algorithm development, pinned experiment sources, build outputs and data
+in separate directories. The agreed layout is:
+
+```text
+<development_root>/                 # For example, ~/dev; any location is valid
+  extender_workspace/               # Ongoing algorithm development
+    src/
+    build/
+    install/
+    log/
+
+  robot_experiments/                # Experiment repositories and pinned sources
+    snake/
+      dependencies/
+      protocol/
+      bringup/
+      src/
+      analysis/
+      docs/
+
+  experiment_workspaces/            # Isolated build outputs, one per revision
+    snake_<revision>/
+      build/
+      install/
+      log/
+
+  robot_experiments_data/           # Acquisitions and analyses, outside Git
+    snake/
+```
+
+This is an organizational convention, not a set of hard-coded paths or a claim
+that every directory already exists. In particular, build and data directories
+are created when needed. Source paths are derived from Git. Keep the experiment
+checkout outside `extender_workspace/src` to avoid duplicate ROS packages.
+The separate identity-to-pseudonym register is not part of the shared data tree.
+
+The [Snake build instructions](snake/README.md#build-in-an-isolated-workspace)
+accept `SNAKE_BUILD_ROOT`. To use the sibling `experiment_workspaces/` directory
+shown above, run this from the **umbrella repository root**, before following
+those instructions from `snake/` in the same shell:
+
+```bash
+export SNAKE_BUILD_ROOT="$(dirname "$(git rev-parse --show-toplevel)")/experiment_workspaces"
+cd snake
+```
+
+Alternatively, set `SNAKE_BUILD_ROOT` to another absolute path. Without this
+override, the build instructions use the XDG state directory (normally
+`$HOME/.local/state/robot_experiments/workspaces`), not the sibling directory.
+The future acquisition application will need a configurable data location;
+no data-directory environment variable is implemented yet.
+
+For local application projects, use `robot_experiments/` for shared methodology
+and experiment references, and `robot_experiments/snake/` for work on Snake.
+These refer to the same checkout, not duplicate clones. Keep algorithm development
+associated with `extender_workspace/`.
+
 ## Clone the experiments
 
 Clone this repository **outside the package-development ROS workspace**. Each
 experiment contains its own pinned package copies; these should not share source
-discovery or build outputs with ongoing algorithm development. For example, under
-any parent directory of your choice:
-
-```text
-<parent>/
-  package_development_ws/       # Working branches and their build/install/log
-  robot_experiments/            # Experiment repositories and pinned dependencies
-  experiment_builds/            # Optional location for isolated build outputs
-  experiment_data/              # Acquisitions outside Git
-```
-
-These directory names are illustrative, not required paths. Build instructions
-derive source locations from Git and allow a configurable output directory.
+discovery or build outputs with ongoing algorithm development.
 
 ```bash
 git clone --recurse-submodules https://github.com/emoullet/robot_experiments.git

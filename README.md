@@ -30,6 +30,63 @@ experiment commit, then its updated reference in this umbrella repository.
 Build each experiment in a workspace separate from ongoing development.
 `COLCON_IGNORE` prevents accidental discovery of these nested package copies.
 
+## Verify the submodule checkout
+
+Run from this repository's root:
+
+```bash
+git submodule status --recursive
+git status --short
+git submodule foreach --recursive 'git status --short'
+```
+
+The first character of each `submodule status` line describes its state:
+
+| Prefix | Meaning |
+| --- | --- |
+| Space | Checked out at the commit recorded by its immediate parent |
+| `-` | Not initialized |
+| `+` | Checked out at a different commit |
+| `U` | Merge conflict |
+
+The short status commands also reveal modified or untracked files: a matching
+commit alone does not prove a clean working tree. `foreach` prints repository
+headings even when there are no changes. Names in parentheses in `submodule status`
+are descriptive references, not necessarily active branches. Detached HEAD is
+normal for pinned submodules.
+
+To initialize missing submodules or restore the recorded versions, first preserve
+any local work, then run:
+
+```bash
+git submodule update --init --recursive
+```
+
+This checks source retrieval, not compilation or robot behavior.
+See the [Snake build instructions](snake/README.md#build-in-an-isolated-workspace)
+and [dependency revision workflow](snake/dependencies/README.md#select-a-dependency-revision).
+These links require the Snake submodule to be available.
+
+## Record an updated experiment
+
+Publish in dependency order: dependency commits, experiment commit, umbrella commit.
+After committing and pushing a change in Snake, return to this repository's root:
+
+```bash
+git diff --submodule=log
+git add snake
+git commit -m "Update Snake experiment revision"
+git push origin main
+```
+
+These publishing examples assume you are working on `main`; use your development
+branch and review workflow when appropriate. Do not create experiment commits on
+an unnoticed detached HEAD: check `git status` and create or switch to a working
+branch first. Never publish a parent reference to a dependency commit that others
+cannot fetch.
+
+Reference: [Git submodule documentation](https://git-scm.com/docs/git-submodule).
+
 ## Methodology and decisions
 
 - [Working methodology](docs/methodology.md): how Work, Drive, Codex and Git fit together.
